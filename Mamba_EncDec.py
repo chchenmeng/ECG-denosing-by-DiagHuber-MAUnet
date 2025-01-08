@@ -9,9 +9,6 @@ from mamba_ssm.modules.mamba_simple import Mamba
 class AddGatedNoise(nn.Module):
     def __init__(self):
         super(AddGatedNoise, self).__init__()
-        # You need to define the parameters of this layer
-        # if there are any. Assuming it adds some noise controlled
-        # by gates, here's a simplified example.
 
     def forward(self, x):
         if self.training:
