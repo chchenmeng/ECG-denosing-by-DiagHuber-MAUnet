@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 from mamba_ssm.modules.mamba_simple import Mamba
-# 自定义添加噪声层 (根据需要实现)
+
 class AddGatedNoise(nn.Module):
     def __init__(self):
         super(AddGatedNoise, self).__init__()
@@ -112,9 +112,9 @@ class RM_UNet(nn.Module):
         return predictions
 
 
-class FeatureAttention(nn.Module):
+class ChannelAttention(nn.Module):
     def __init__(self, in_channels):
-        super(FeatureAttention, self).__init__()
+        super(ChannelAttention, self).__init__()
         self.avg_pool = nn.AdaptiveAvgPool1d(1)
         self.max_pool = nn.AdaptiveMaxPool1d(1)
         self.fc = nn.Sequential(
@@ -148,13 +148,13 @@ class TempAttention(nn.Module):
 class CBAM(nn.Module):
     def __init__(self, in_channels):
         super(CBAM, self).__init__()
-        self.feature_attention = FeatureAttention(in_channels)
+        self.channel_attention = ChannelAttention(in_channels)
         self.temp_attention = TempAttention()
 
     def forward(self, x):
         # print('@@@')
         # print(self.channel_attention(x).size())
-        x = x * self.feature_attention(x)
+        x = x * self.channel_attention(x)
         # print('###')
         # print(x.size())
         x = x * self.spatial_attention(x)
